@@ -2,8 +2,9 @@ local player = game.Players.LocalPlayer
 local camera = game.Workspace.CurrentCamera
 local userInput = game:GetService("UserInputService")
 
-print("aimbot loaded")
 
+print("aimbot loaded")
+print("AIMBOT BY STAR!")
 print("press E to use")
 
 local function findNearestEnemy()
