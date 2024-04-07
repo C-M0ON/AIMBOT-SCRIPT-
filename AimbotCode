@@ -1,0 +1,61 @@
+local player = game.Players.LocalPlayer
+local camera = game.Workspace.CurrentCamera
+local userInput = game:GetService("UserInputService")
+
+print("aimbot loaded")
+
+print("press E to use")
+
+local function findNearestEnemy()
+    local character = player.Character
+    if not character then
+        return nil
+    end
+    local maxDistance = math.huge
+    local nearestEnemy = nil
+    
+    for _, enemyPlayer in ipairs(game.Players:GetPlayers()) do
+        if enemyPlayer.Team ~= player.Team then
+            local enemyCharacter = enemyPlayer.Character
+            if enemyCharacter and enemyCharacter:FindFirstChild("Humanoid") and enemyCharacter.Humanoid.Health > 0 then
+                local distance = (character:WaitForChild("Head").Position - enemyCharacter:WaitForChild("Head").Position).magnitude
+                if distance < maxDistance then
+                    maxDistance = distance
+                    nearestEnemy = enemyCharacter:WaitForChild("Head")
+                end
+            end
+        end
+    end
+    
+    return nearestEnemy
+end
+
+local function aimAtNearestEnemy()
+    local nearestEnemy = findNearestEnemy()
+    if nearestEnemy then
+        camera.CFrame = CFrame.new(camera.CFrame.Position, nearestEnemy.Position)
+    else
+        print("No enemies nearby.")
+    end
+end
+
+local aiming = false
+local firstPerson = false
+
+userInput.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.E then
+        aiming = not aiming
+        if aiming then
+            while aiming do
+                aimAtNearestEnemy()
+                wait()
+            end
+        end
+    end
+end)
+
+userInput.InputEnded:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.E then
+        aiming = false
+    end
+end)
