@@ -1,0 +1,56 @@
+local player = game.Players.LocalPlayer
+local camera = game.Workspace.CurrentCamera
+local userInput = game:GetService("UserInputService")
+
+local gui = Instance.new("ScreenGui")
+gui.Parent = game.Players.LocalPlayer.PlayerGui
+
+local textbox = Instance.new("TextLabel")
+textbox.Size = UDim2.new(0, 200, 0, 50)
+textbox.Position = UDim2.new(0.5, -100, 0.5, -25)
+textbox.Text = "Press E to use!"
+textbox.TextScaled = true
+textbox.Parent = gui
+
+wait(2)
+
+textbox:Destroy()
+
+print("Aimbot loaded")
+print("Aimbot by Star!")
+
+local function findNearestTeammate()
+    local character = player.Character
+    if not character then
+        return nil
+    end
+    local maxDistance = math.huge
+    local nearestTeammate = nil
+    
+    for _, teammate in ipairs(game.Players:GetPlayers()) do
+        if teammate.Team == player.Team and teammate ~= player then
+            local teammateCharacter = teammate.Character
+            if teammateCharacter and teammateCharacter:FindFirstChild("Humanoid") and teammateCharacter.Humanoid.Health > 0 then
+                local distance = (character:FindFirstChild("Head").Position - teammateCharacter:FindFirstChild("Head").Position).magnitude
+                if distance < maxDistance then
+                    maxDistance = distance
+                    nearestTeammate = teammateCharacter:FindFirstChild("Head")
+                end
+            end
+        end
+    end
+
+    return nearestTeammate
+end
+
+userInput.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.E then
+        while true do
+            local target = findNearestTeammate()
+            if target then
+                camera.CFrame = CFrame.new(camera.CFrame.Position, target.Position)
+            end
+            wait(0.01)  -- Adjust the interval as needed for aim accuracy
+        end
+    end
+end)
