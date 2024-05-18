@@ -4,7 +4,7 @@ local userInput = game:GetService("UserInputService")
 
 
 print("aimbot loaded")
-print("AIMBOT BY STAR!")
+print("AIMBOT BY CODESPARK")
 print("press E to use")
 
 local function findNearestEnemy()
